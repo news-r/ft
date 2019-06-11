@@ -12,7 +12,6 @@
 #' }
 #' 
 #' @import purrr
-#' @import async
 #' @import httr
 #' @import assertthat
 #' 
