@@ -19,5 +19,6 @@ Imports:
   purrr,
   dplyr,
   crayon,
+  tibble,
   jsonlite,
   assertthat

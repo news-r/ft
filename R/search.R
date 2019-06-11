@@ -2,10 +2,10 @@
 #' 
 #' The content endpoint returns all pieces of content in the API.
 #' 
-#' @param since The start date and time: any content created, updated or deleted since this date should be returned. 
-#' A valid since parameter must be supplied, and it must be either a \code{Date} or \code{POSIX} object. 
-#' The date and time must not be in the future, and cannot be older than 90 days from the present.
-#' @param pages Number of pages to collect.
+#' @param q The search query.
+#' @param ... Any other parameter.
+#' @param pages Number of pages to collect from \code{start_at_page}.
+#' @param start_at_page Initial page.
 #' 
 #' @examples
 #' \dontrun{
@@ -26,7 +26,10 @@ ft_search <- function(q, ..., pages = 1, start_at_page = 1) {
   offsets <- (((seq(pages) * 100) + 1) + (init_offset * 100)) - 100
   body <- list(
     queryString = q, 
-    maxResults = 100
+    resultContext = list(
+      maxResults = 100
+    ),
+    ...
   )
 
   # url
@@ -35,13 +38,15 @@ ft_search <- function(q, ..., pages = 1, start_at_page = 1) {
   url$query <- list(apiKey = .get_key())
   url <- build_url(url)
 
-  results <- list()
+  results <- tibble::tibble()
   for(off in offsets){
-    body$offset <- off
-    response <- POST(url, body = body)
+    body$resultContext$offset <- off
+    response <- POST(url, body = body, encode = "json")
     stop_for_status(response)
     content <- content(response)
-    results <- append(results, list(content))
+    content_df <- content$results[[1]]$results %>% 
+      purrr::map_dfr(tibble::as_tibble)
+    results <- dplyr::bind_rows(results, content_df)
   }
   results
 }
