@@ -1,0 +1,58 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+<!-- badges: start -->
+[![Travis build status](https://travis-ci.org/news-r/ft.svg?branch=master)](https://travis-ci.org/news-r/ft)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/news-r/ft?branch=master&svg=true)](https://ci.appveyor.com/project/news-r/ft)
+<!-- badges: end -->
+
+# ft
+
+Brings the [FT](https://www.ft.com/) Search API to R.
+
+## Installation
+
+You can install the package from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("news-r/ft")
+```
+
+
+## Setup
+
+Create a free account at [developer.ft.com](https://developer.ft.com) to create an API key.
+
+```r
+ft_key("xxXXxxXx")
+```
+
+Note that you can specify the `FT_API_KEY` key as an environment variable in your `.Renviron` for convenience.
+
+
+## Example
+
+```{r}
+library(ft)
+
+# search 2 pages of articles "banks"
+banks <- ft_search("banks", pages = 2)
+
+# search titles of articles on "debates" and not Trump
+debates <- ft_search("debates -Trump", curations = "ARTICLES", aspects = "title")
+class(debates)
+unlist(debates$title)
+```

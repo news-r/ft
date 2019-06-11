@@ -5,12 +5,23 @@
 \alias{ft_search}
 \title{Calls}
 \usage{
-ft_search(q, ..., pages = 1, start_at_page = 1)
+ft_search(q, curations = NULL, facets = NULL, aspects = NULL,
+  sort_aspect = NULL, sort_order = NULL, pages = 1,
+  start_at_page = 1)
 }
 \arguments{
 \item{q}{The search query.}
 
-\item{...}{Any other parameter.}
+\item{curations}{FT content is organised into curations which you can use to filter your search, 
+you can get the full list of valid curations with \code{\link{ft_list_curations}}.}
+
+\item{facets}{Filter search by specific facets, see \code{\link{ft_list_facets}} for a full list.}
+
+\item{aspects}{Aspects (vector or list) to return, see \code{\link{ft_list_aspects}} for a list of valid values.}
+
+\item{sort_aspect, sort_order}{\code{sort_aspect} must be a valid aspect,
+see \code{\link{ft_list_aspects}} while \code{sort_order} must be set to either 
+\code{ASC} OR \code{DESC}. Note that they must be used together.}
 
 \item{pages}{Number of pages to collect from \code{start_at_page}.}
 
@@ -21,12 +32,13 @@ The content endpoint returns all pieces of content in the API.
 }
 \examples{
 \dontrun{
-(to_search <- gd_search("debates", pages = 13))
-results <- gd_call(to_search)
+banks <- ft_search("banks", pages = 2) # search 2 pages of articles "banks"
 
-# select items to retrieve
-items_to_get <- gd_items(results$apiUrl[1:13])
-items <- gd_call(items_to_get)
+# search titles of articles on "debates" and not Trump
+debates <- ft_search("debates -Trump", curations = "ARTICLES", aspects = "title")
 }
 
+}
+\seealso{
+Official documentation: \url{https://developer.ft.com/portal/docs-api-v1-reference-search-search-api-tutorial}.
 }

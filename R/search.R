@@ -3,24 +3,35 @@
 #' The content endpoint returns all pieces of content in the API.
 #' 
 #' @param q The search query.
-#' @param ... Any other parameter.
+#' @param curations FT content is organised into curations which you can use to filter your search, 
+#' you can get the full list of valid curations with \code{\link{ft_list_curations}}.
+#' @param facets Filter search by specific facets, see \code{\link{ft_list_facets}} for a full list.
+#' @param sort_aspect,sort_order \code{sort_aspect} must be a valid aspect,
+#' see \code{\link{ft_list_aspects}} while \code{sort_order} must be set to either 
+#' \code{ASC} OR \code{DESC}. Note that they must be used together.
+#' @param aspects Aspects (vector or list) to return, see \code{\link{ft_list_aspects}} for a list of valid values.
 #' @param pages Number of pages to collect from \code{start_at_page}.
 #' @param start_at_page Initial page.
 #' 
 #' @examples
 #' \dontrun{
-#' (to_search <- gd_search("debates", pages = 13))
-#' results <- gd_call(to_search)
-#' 
-#' # select items to retrieve
-#' items_to_get <- gd_items(results$apiUrl[1:13])
-#' items <- gd_call(items_to_get)
+#' banks <- ft_search("banks", pages = 2) # search 2 pages of articles "banks"
+#'
+#' # search titles of articles on "debates" and not Trump
+#' debates <- ft_search("debates -Trump", curations = "ARTICLES", aspects = "title")
 #' }
+#' 
+#' @seealso Official documentation: \url{https://developer.ft.com/portal/docs-api-v1-reference-search-search-api-tutorial}.
 #' 
 #' @name calls
 #' @export
-ft_search <- function(q, ..., pages = 1, start_at_page = 1) {
-  
+ft_search <- function(q, curations = NULL, facets = NULL, aspects = NULL, 
+  sort_aspect = NULL, sort_order = NULL, pages = 1, start_at_page = 1) {
+
+  sort <- sum(!is.null(sort_aspect), !is.null(sort_order))
+  if(sort == 1)
+    stop("Arguments `sort_field` and `sort_order` must be used together", call. = FALSE)
+
   # process inputs
   init_offset <- start_at_page - 1
   offsets <- (((seq(pages) * 100) + 1) + (init_offset * 100)) - 100
@@ -28,9 +39,24 @@ ft_search <- function(q, ..., pages = 1, start_at_page = 1) {
     queryString = q, 
     resultContext = list(
       maxResults = 100
-    ),
-    ...
+    )
   )
+
+  if(!is.null(aspects)) 
+    body$resultContext$aspects <- as.list(aspects)
+
+  if(!is.null(facets)) 
+    body$resultContext$facets <- facets
+
+  if(!is.null(sort_aspect)) 
+    body$resultContext$sortField <- sort_aspect
+
+  if(!is.null(sort_order)) 
+    body$resultContext$sortOrder <- sort_order
+
+  if(!is.null(sort_order)) 
+    body$queryContext$curations <- curations
+
 
   # url
   url <- parse_url(BASE_URL)
