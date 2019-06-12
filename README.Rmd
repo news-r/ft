@@ -55,3 +55,9 @@ banks <- ft_search("banks", pages = 2)
 debates <- ft_search("debates -Trump", curations = "ARTICLES", aspects = "title")
 head(debates)
 ```
+
+You can learn more about the possible `curations`, `aspects` and other filters with `?discover` which describes functions that return vectors of valid filters.
+
+```{r}
+ft_list_curations()
+```

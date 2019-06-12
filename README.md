@@ -1,7 +1,3 @@
----
-output: github_document
----
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 
@@ -57,4 +53,12 @@ head(debates)
 #> 4 article   1            aa7ca41c-86… https://api.ft.co… It’s easy to forg…
 #> 5 article   1            3cb9f0b0-87… https://api.ft.co… Instagram atheist…
 #> 6 article   1            48ecd7b4-88… https://api.ft.co… South Africa’s ra…
+```
+
+You can learn more about the possible `curations`, `aspects` and other filters with `?discover` which describes functions that return vectors of valid filters.
+
+
+```r
+ft_list_curations()
+#> [1] "ARTICLES" "BLOGS"    "PAGES"    "PODCASTS" "VIDEOS"
 ```
