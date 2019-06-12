@@ -53,6 +53,5 @@ banks <- ft_search("banks", pages = 2)
 
 # search titles of articles on "debates" and not Trump
 debates <- ft_search("debates -Trump", curations = "ARTICLES", aspects = "title")
-class(debates)
-unlist(debates$title)
+head(debates)
 ```

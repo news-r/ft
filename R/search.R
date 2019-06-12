@@ -71,7 +71,7 @@ ft_search <- function(q, curations = NULL, facets = NULL, aspects = NULL,
     stop_for_status(response)
     content <- content(response)
     content_df <- content$results[[1]]$results %>% 
-      purrr::map_dfr(tibble::as_tibble)
+      purrr::map_dfr(.parse)
     results <- dplyr::bind_rows(results, content_df)
   }
   results
