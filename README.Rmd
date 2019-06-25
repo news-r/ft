@@ -56,7 +56,7 @@ debates <- ft_search("debates -Trump", curations = "ARTICLES", aspects = "title"
 head(debates)
 ```
 
-You can learn more about the possible `curations`, `aspects` and other filters with `?discover` which describes functions that return vectors of valid filters.
+You can learn more about the possible `curations`, `aspects`, `facets`, `searchable`, and `sortable` with `?discover` which describes functions that return vectors of valid filters.
 
 ```{r}
 ft_list_curations()
